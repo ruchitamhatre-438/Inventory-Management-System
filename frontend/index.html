@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+
+        /* Top navigation bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #333;
+        }
+        
+        .navbar .fa-circle-user {
+            font-size: 36px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Main content area */
+        .middle-body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            gap: 30px;
+        }
+
+        /* Card container */
+        .card {
+            width: calc(33.33% - 20px); /* 3 boxes per row, with gap */
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Hover effect for cards */
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Image styling inside the card */
+        .card img {
+            width: 100%;
+            height: 250px; /* Adjusted height to fill the box */
+            object-fit: cover;
+        }
+        
+        /* Modal specific styles */
+        .modal {
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none; /* Initially hidden */
+        }
+        /* mobile-friendly code */
+        /* Responsive for mobile devices */
+@media (max-width: 768px) {
+  /* Navbar adjustments */
+  .navbar h1 {
+    font-size: 20px;
+  }
+
+  .navbar .fa-circle-user {
+    font-size: 28px;
+  }
+
+  /* Stack cards vertically */
+  .middle-body {
+    flex-direction: column;
+    padding: 20px 10px;
+  }
+
+  /* Cards full width with margin */
+  .card {
+    width: 100% !important;
+    margin-bottom: 20px;
+  }
+
+  /* Modal width smaller */
+  .modal > div {
+    width: 90% !important;
+    max-width: none !important;
+  }
+}
+
+@media (max-width: 400px) {
+  /* Further font size reductions */
+  .navbar h1 {
+    font-size: 18px;
+  }
+
+  .navbar .fa-circle-user {
+    font-size: 24px;
+  }
+
+  /* Input fields in modal smaller */
+  #login-form input[type="text"],
+  #login-form input[type="password"] {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+
+  /* Login button smaller font */
+  #login-form button {
+    font-size: 15px;
+  }
+}
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span><h1 style="color:black;">Inventory Management System</h1></span>
+        <span><i class="fa-solid fa-circle-user" id="user-icon"></i></span>
+    </div>
+
+    
+        <div class="middle-body">
+    <!-- Software -->
+    <a href="software_data.html" class="card">
+        <img src="software.png">
+        <div style="font-size:18px; padding: 10px;">
+            Tools and applications used for coding,<br>
+            system management, or running technical processes.
+        </div>
+        <div id="count1" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component1">0</span>
+        </div>
+    </a>
+
+    <!-- Embedded -->
+    <a href="embedded_data.html" class="card">
+        <img src="embedded.png">
+        <div style="font-size:18px; padding: 10px;">
+            Microcontrollers and boards for dedicated system tasks.
+        </div>
+        <div id="count2" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component2">0</span>
+        </div>
+        <br>
+    </a>
+
+    <!-- PCB -->
+    <a href="pcb_data.html" class="card">
+        <img src="pcb.png">
+        <div style="font-size:18px; padding: 10px;">
+            Boards that connect and support electronic components.
+        </div>
+        <div id="count3" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component3">0</span>
+        </div>
+        <br>
+    </a>
+
+    <!-- RF -->
+    <a href="RadioData.html" class="card">
+        <img src="rf.png">
+        <div style="font-size:18px; padding: 10px;">
+            Devices and modules for wireless communication.
+        </div>
+        <div id="count4" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component4">0</span>
+        </div>
+    </a>
+
+    <!-- Sensors -->
+    <a href="SensorsData.html" class="card">
+        <img src="sensors.png">
+        <div style="font-size:18px; padding: 10px;">
+            Modules that detect environment changes: gas, motion, etc.
+        </div>
+        <div id="count5" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component5">0</span>
+        </div>
+    </a>
+
+    <!-- Tools -->
+    <a href="ToolsData.html" class="card">
+        <img src="tools.png">
+        <div style="font-size:18px; padding: 10px;">
+            Equipment like soldering kits, wrenches, and instruments.
+        </div>
+        <div id="count6" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component6">0</span>
+        </div>
+    </a>
+</div>
+
+
+    <!-- The Login Modal -->
+    <div id="login-modal" class="modal">
+        <div class="relative bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-1/3 mx-auto mt-20">
+            <!-- Close Button -->
+            <button class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 focus:outline-none" id="close-modal-btn">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h1 class="text-2xl font-bold text-center mb-6 text-gray-800" >Login</h1>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                    <input type="text" id="username" name="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" style="background-color: #1e8986;color:white;font-size:17px;">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+
+        // Example component counts (you can load these from a database later)
+// let componentCounts = {
+//     component1: 10,  // Software
+//     component2: 12,  // Embedded
+//     component3: 8,   // PCB
+//     component4: 5,   // RF
+//     component5: 20,  // Sensors
+//     component6: 7    // Tools
+// };
+
+// Function to update counts on page
+// function updateComponentDisplay() {
+//     for (let key in componentCounts) {
+//         document.getElementById(key).textContent = componentCounts[key];
+//     }
+// }
+
+// Call the function on page load
+// updateComponentDisplay();
+
+// // Example function to simulate adding a component
+// function addComponent(categoryKey) {
+//     componentCounts[categoryKey]++;
+//     updateComponentDisplay();
+// }
+const domains = [
+  { key: "component1", domain: "software" },
+  { key: "component2", domain: "embedded" },
+  { key: "component3", domain: "pcb" },
+  { key: "component4", domain: "rf" },
+  { key: "component5", domain: "sensors" },
+  { key: "component6", domain: "tools" }
+];
+
+async function fetchAllCounts() {
+  for (let item of domains) {
+    try {
+      const response = await fetch(`http://localhost:3004/getComponentCount/${item.domain}`);
+      const data = await response.json();
+      document.getElementById(item.key).textContent = data.total || 0;
+    } catch (err) {
+      console.error(`Error fetching count for ${item.domain}:`, err);
+    }
+  }
+}
+
+// Call on page load
+fetchAllCounts();
+
+
+// To use this, call: addComponent("component1") to increase Software count
+
+        // Get references to elements
+        const userIcon = document.getElementById('user-icon');
+        const loginModal = document.getElementById('login-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        const loginForm = document.getElementById('login-form');
+
+        // Show the modal when the user icon is clicked
+        userIcon.addEventListener('click', () => {
+            loginModal.style.display = 'block';
+        });
+
+        // Hide the modal when the close button is clicked
+        closeModalBtn.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+        });
+
+        // Hide the modal if the user clicks outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+        });
+
+        // // Handle the login form submission
+        // loginForm.addEventListener('submit', (event) => {
+        //     event.preventDefault(); // Prevent the default form submission
+
+        //     // In a real application, you would validate credentials here.
+        //     // For this example, we'll assume a successful login.
+        //     console.log('Login successful! Redirecting...');
+
+        //     // Redirect to the new page after a short delay
+        //     setTimeout(() => {
+        //         window.location.href = 'admin.html';
+        //     }, 500);
+        // });
+
+        loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent form submission
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    try {
+        const response = await fetch('http://localhost:3004/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (response.ok) {
+            // Login success
+             const data = await response.json();
+
+    // ✅ Save username in localStorage
+    localStorage.setItem("username", data.username);
+            alert('Login successful!');
+            window.location.href = 'xyz.html';
+        } else {
+            // Login failed - show error message from backend
+            const data = await response.json();
+            alert(data.message || 'Login failed');
+        }
+    } catch (error) {
+        alert('Network error. Please try again.');
+        console.error(error);
+    }
+});
+
+async function fetchComponentCount() {
+    try {
+        const response = await fetch('http://localhost:3004/getComponentCount');
+        const data = await response.json();
+
+        document.getElementById("component1").textContent = data.total || 0;
+    } catch (err) {
+        console.error("Error fetching count:", err);
+    }
+}
+
+// Call on page load
+fetchComponentCount();
+
+async function addComponent(componentData) {
+    try {
+        const response = await fetch("http://localhost:3004/addComponent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(componentData)
+        });
+
+        if (response.ok) {
+            alert("Saved Successfully");
+            fetchComponentCount(); // 👈 refresh count instantly
+        }
+    } catch (err) {
+        console.error("Error adding component:", err);
+    }
+}
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Component List</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    table {
+      width: 90%;
+      margin: 40px auto;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #1e8986;
+      color: white;
+    }
+    .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+       .navbar h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #333;
+        }
+        
+        .navbar .fa-solid {
+            font-size: 36px;
+            /* color: #555; */
+            color:black;
+            cursor: pointer;
+        } 
+         body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+        .box1{
+          display:flex;
+          justify-content: center;
+          align-items:center;
+        }
+  </style>
+</head>
+<body>
+   <div class="navbar">
+        <span><h1 style="color:black;">Inventory Management System</h1></span>
+        <span><i class="fa-solid fa-house" onclick="window.location.href='index.html'"></i></span>
+    </div>
+   </div>
+  <h1 style="text-align:center;color:#36EEE0">Stored RF Components</h1>
+  <table id="componentTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Buy Date</th>
+        <th>Cost</th>
+        <th>Warranty</th>
+        <th>Quantity</th>
+        <th>Condition</th>
+        <th>Remark</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch('http://localhost:3004/getComponents/rf')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.querySelector('#componentTable tbody');
+        data.forEach(item => {
+          const row = `
+            <tr>
+              <td>${item.name}</td>
+              <td>${item.description}</td>
+              <td>${new Date(item.buyDate).toLocaleDateString()}</td>
+              <td>₹${item.cost}</td>
+              <td>${item.warranty} months</td>
+              <td>${item.quantity}</td>
+              <td>${item.condition}</td>
+              <td>${item.remark}</td>
+            </tr>
+          `;
+          tbody.innerHTML += row;
+        });
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Your existing CSS styles go here */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #333;
+        }
+        .navbar .fa-circle-user {
+            font-size: 36px;
+            color: #555;
+            cursor: pointer;
+        }
+        .middle-body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            gap: 30px;
+        }
+        .card {
+            width: calc(33.33% - 20px);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            position: relative; /* Needed for positioning the popups */
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        /* --- NEW CSS for Buttons and Popups --- */
+        .action-button-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .action-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+        .action-button.plus {
+            background-color: #4CAF50; /* Green */
+        }
+        .action-button.minus {
+            background-color: #F44336; /* Red */
+        }
+        .action-button:hover {
+            opacity: 0.9;
+        }
+        /* Modal for adding new domain */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding-top: 50px;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        .modal-close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .modal-close-btn:hover,
+        .modal-close-btn:focus {
+            color: #000;
+        }
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Ensures padding doesn't affect total width */
+        }
+        .modal-content button {
+            background-color: #00796b;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+        /* --- NEW CSS for Popups --- */
+        .hover-popup {
+            display: none;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .card-image-wrapper:hover .hover-popup,
+        .card-count-wrapper:hover .hover-popup {
+            display: block;
+        }
+        .card-image-wrapper {
+            position: relative;
+        }
+        .card-count-wrapper {
+            position: relative;
+        }
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .card { width: calc(50% - 20px); }
+        }
+        @media (max-width: 640px) {
+            .card { width: 100%; }
+            .middle-body { padding: 20px 10px; gap: 15px; }
+            .navbar { flex-direction: row; height: auto; padding: 10px; text-align: center; }
+            .navbar h1 { font-size: 20px; }
+            .navbar .fa-circle-user { font-size: 28px; margin-top: 8px; }
+            .action-button { width: 45px; height: 45px; font-size: 22px; }
+            .modal-content { width: 95%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span><h1>Inventory Management System</h1></span>
+        <span>
+            <i class="fa-solid fa-circle-user" id="logoutIcon" title="Logout"></i>
+        </span>
+    </div>
+
+    <div class="middle-body" id="cardContainer">
+    <a href="try.html?domain=software" class="card" data-domain="software">
+        <div class="card-image-wrapper">
+            <img src="software.png" alt="Software">
+            <div class="hover-popup">Click to check the data</div>
+        </div>
+        <div style="font-size:18px; padding: 10px;">
+            Tools and applications used for coding, system management, or running technical processes.
+        </div>
+        <div id="count1" class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component1">0</span>
+            <div class="hover-popup">Click to add data</div>
+        </div>
+    </a>
+
+    <a href="try.html?domain=embedded" class="card" data-domain="embedded">
+        <div class="card-image-wrapper">
+            <img src="embedded.png" alt="Embedded">
+            <div class="hover-popup">Click to check the data</div>
+        </div>
+        <div style="font-size:18px; padding: 10px;">
+            Microcontrollers and boards for dedicated system tasks.
+        </div>
+        <div id="count2" class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component2">0</span>
+            <div class="hover-popup">Click to add data</div>
+        </div>
+    </a>
+
+    <a href="try.html?domain=pcb" class="card" data-domain="pcb">
+        <div class="card-image-wrapper">
+            <img src="pcb.png" alt="PCB">
+            <div class="hover-popup">Click to check the data</div>
+        </div>
+        <div style="font-size:18px; padding: 10px;">
+            Boards that connect and support electronic components.
+        </div>
+        <div id="count3" class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component3">6</span>
+            <div class="hover-popup">Click to add data</div>
+        </div>
+    </a>
+
+    <a href="#" class="card" data-domain="radiofrequency">
+        <div class="card-image-wrapper">
+            <img src="rf.png" alt="Radio Frequency">
+            <div class="hover-popup">Click to check the data</div>
+        </div>
+        <div style="font-size:18px; padding: 10px;">
+            Devices and modules for wireless communication.
+        </div>
+        <div id="count4" class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component4">9</span>
+            <div class="hover-popup">Click to add data</div>
+        </div>
+    </a>
+
+    <a href="#" class="card" data-domain="sensors">
+        <div class="card-image-wrapper">
+            <img src="sensors.png" alt="Sensors">
+            <div class="hover-popup">Click to check the data</div>
+        </div>
+        <div style="font-size:18px; padding: 10px;">
+            Modules that detect environment changes: gas, motion, etc.
+        </div>
+        <div id="count5" class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component5">0</span>
+            <div class="hover-popup">Click to add data</div>
+        </div>
+    </a>
+
+    <a href="#" class="card" data-domain="tools">
+        <div class="card-image-wrapper">
+            <img src="tools.png" alt="Tools">
+            <div class="hover-popup">Click to check the data</div>
+        </div>
+        <div style="font-size:18px; padding: 10px;">
+            Equipment like soldering kits, wrenches, and instruments.
+        </div>
+        <div id="count6" class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component6">10</span>
+            <div class="hover-popup">Click to add data</div>
+        </div>
+    </a>
+</div>
+
+    <div class="action-button-container">
+        <div class="action-button plus" id="addDomainBtn" title="Add New Domain">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+        <div class="action-button minus" id="removeDomainBtn" title="Remove Domain">
+            <i class="fa-solid fa-minus"></i>
+        </div>
+    </div>
+
+    <div id="addDomainModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close-btn" id="closeModalBtn">&times;</span>
+            <h2>Add New Domain</h2>
+            <form id="addDomainForm">
+                <label for="domainName">Domain Name:</label>
+                <input type="text" id="domainName" name="domainName" required>
+
+                <label for="domainImage">Image URL:</label>
+                <input type="text" id="domainImage" name="domainImage" required>
+
+                <label for="domainDescription">Description:</label>
+                <textarea id="domainDescription" name="domainDescription" rows="4" required></textarea>
+
+                <button type="submit">Add Domain</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const domains = [
+            { key: "component1", domain: "software" },
+            { key: "component2", domain: "embedded" },
+            { key: "component3", domain: "pcb" },
+            { key: "component4", domain: "rf" },
+            { key: "component5", domain: "sensors" },
+            { key: "component6", domain: "tools" }
+        ];
+
+        async function fetchAllCounts() {
+            for (let item of domains) {
+                try {
+                    const response = await fetch(`http://localhost:3004/getComponentCount/${item.domain}`);
+                    const data = await response.json();
+                    document.getElementById(item.key).textContent = data.total || 0;
+                } catch (err) {
+                    console.error(`Error fetching count for ${item.domain}:`, err);
+                }
+            }
+        }
+        fetchAllCounts();
+
+        document.getElementById("logoutIcon").addEventListener("click", () => {
+            const confirmed = confirm("Are you sure you want to logout?");
+            if (confirmed) {
+                window.location.href = "index.html";
+            }
+        });
+
+        // Get elements for the modal and buttons
+        const addDomainBtn = document.getElementById("addDomainBtn");
+        const removeDomainBtn = document.getElementById("removeDomainBtn");
+        const addDomainModal = document.getElementById("addDomainModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
+        const addDomainForm = document.getElementById("addDomainForm");
+        const cardContainer = document.getElementById("cardContainer");
+
+        // Event listener to open the modal
+        addDomainBtn.addEventListener("click", () => {
+            addDomainModal.style.display = "block";
+        });
+
+        // Event listener to close the modal
+        closeModalBtn.addEventListener("click", () => {
+            addDomainModal.style.display = "none";
+        });
+
+        // Close modal if user clicks outside of it
+        window.addEventListener("click", (event) => {
+            if (event.target === addDomainModal) {
+                addDomainModal.style.display = "none";
+            }
+        });
+
+        // Handle form submission
+        addDomainForm.addEventListener("submit", (event) => {
+            event.preventDefault(); // Prevent page reload
+            
+            const domainName = document.getElementById("domainName").value;
+            const domainImage = document.getElementById("domainImage").value;
+            const domainDescription = document.getElementById("domainDescription").value;
+            
+            // Create a new card element and append it to the body
+            const newDomainCard = document.createElement("a");
+            const domainSlug = domainName.toLowerCase().replace(/\s/g, ''); // create a unique ID
+            newDomainCard.href = `try.html?domain=${domainSlug}`;
+            newDomainCard.className = "card";
+            newDomainCard.innerHTML = `
+                <div class="card-image-wrapper">
+                    <img src="${domainImage}" alt="${domainName}">
+                    <div class="hover-popup">Click to check the data</div>
+                </div>
+                <div style="font-size:18px; padding: 10px;">
+                    ${domainDescription}
+                </div>
+                <div class="card-count-wrapper" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+                    Components: <span>0</span>
+                    <div class="hover-popup">Click to add data</div>
+                </div>
+            `;
+            cardContainer.appendChild(newDomainCard);
+            
+            // Close the modal and reset the form
+            addDomainModal.style.display = "none";
+            addDomainForm.reset();
+            
+            // Optional: you can add the new domain to your existing array here for future API calls
+            domains.push({ key: `component-${domainSlug}`, domain: domainSlug });
+        });
+
+        // Placeholder for the minus button functionality
+        removeDomainBtn.addEventListener("click", () => {
+            // alert("This feature is currently under development.");
+            // --- NEW FUNCTIONALITY FOR THE MINUS BUTTON ---
+
+    const domainToRemove = prompt("Enter the name of the domain to remove (e.g., 'Software').");
+
+    if (domainToRemove) {
+        // Convert the input to a slug to match the card's data attribute
+        const domainSlug = domainToRemove.toLowerCase().replace(/\s/g, '');
+
+        // Find the card element with the matching data attribute
+        const cardToRemove = document.querySelector(`.card[data-domain="${domainSlug}"]`);
+
+        if (cardToRemove) {
+            // Remove the card from the DOM
+            cardToRemove.remove();
+            alert(`'${domainToRemove}' domain has been removed.`);
+        } else {
+            alert(`Domain '${domainToRemove}' not found.`);
+        }
+    }
+});
+    
+    </script>
+</body>
+</html>

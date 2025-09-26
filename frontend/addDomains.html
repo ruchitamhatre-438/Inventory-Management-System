@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - Add Domain</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-6 bg-gray-100">
+  <div class="max-w-md mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-xl font-bold mb-4">Add New Domain</h2>
+    <form id="domainForm">
+      <input type="text" id="name" placeholder="Domain Name (e.g. embedded)" 
+             class="w-full border p-2 mb-3 rounded" required>
+      <input type="text" id="description" placeholder="Description" 
+             class="w-full border p-2 mb-3 rounded">
+      <input type="text" id="image" placeholder="Image URL" 
+             class="w-full border p-2 mb-3 rounded">
+
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+        Add Domain
+      </button>
+    </form>
+    <p id="message" class="mt-4 text-green-600 font-bold"></p>
+  </div>
+
+  <script>
+    document.getElementById("domainForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const description = document.getElementById("description").value;
+      const image = document.getElementById("image").value;
+
+      const response = await fetch("http://localhost:3004/addDomain", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, description, image })
+      });
+
+      const data = await response.json();
+      document.getElementById("message").textContent = data.message || data.error;
+    });
+  </script>
+</body>
+</html>

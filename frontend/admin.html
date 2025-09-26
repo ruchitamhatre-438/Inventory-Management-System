@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+
+        /* Top navigation bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #333;
+        }
+        
+        .navbar .fa-circle-user {
+            font-size: 36px;
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Main content area */
+        .middle-body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px 20px;
+            gap: 30px;
+        }
+
+        /* Card container */
+        .card {
+            width: calc(33.33% - 20px); /* 3 boxes per row, with gap */
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Hover effect for cards */
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Image styling inside the card */
+        .card img {
+            width: 100%;
+            height: 250px; /* Adjusted height to fill the box */
+            object-fit: cover;
+        }
+        
+        /* Modal specific styles */
+        .modal {
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: none; /* Initially hidden */
+        }
+        .plus-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-color: #00796b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+            z-index: 1000;
+        }
+
+        
+    
+    /* Responsive Design - Mobile Friendly */
+    @media (max-width: 1024px) {
+        /* For tablets - 2 cards per row */
+        .card {
+            width: calc(50% - 20px);
+        }
+    }
+
+    @media (max-width: 640px) {
+        /* For mobile - 1 card per row */
+        .card {
+            width: 100%;
+        }
+
+        /* Reduce padding for smaller screens */
+        .middle-body {
+            padding: 20px 10px;
+            gap: 15px;
+        }
+
+        /* Adjust navbar for mobile */
+        .navbar {
+            flex-direction: row;
+            height: auto;
+            padding: 10px;
+            text-align: center;
+        }
+        .navbar h1 {
+            font-size: 20px;
+        }
+        .navbar .fa-circle-user {
+            font-size: 28px;
+            margin-top: 8px;
+        }
+
+        /* Adjust plus button size */
+        .plus-button {
+            width: 50px;
+            height: 50px;
+            font-size: 28px;
+            bottom: 15px;
+            right: 15px;
+        }
+
+        /* Make images smaller in height */
+        .card img {
+            height: 200px;
+        }
+    }
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span><h1>Inventory Management System</h1></span>
+        <!-- <span><i class="fa-solid fa-circle-user" id="user-icon"></i></span> -->
+         <span>
+            <i class="fa-solid fa-circle-user" id="logoutIcon" title="Logout"></i>
+        </span>
+    </div>
+
+     <div class="middle-body">
+      
+
+        <a href="try.html?domain=software" class="card">
+            <!-- <img src="https://placehold.co/300x250/E0F7FA/00796B?text=Software" alt="Software"> -->
+             <img src="software.png">
+             <div style="font-size:18px; padding: 10px;">
+            Tools and applications used for coding,<br>
+            system management, or running technical processes.
+        </div>
+        <div id="count1" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component1">0</span>
+        </div>
+        </a>
+
+           <a href="try.html?domain=embedded" class="card">
+              <img src="embedded.png">
+             <div style="font-size:18px; padding: 10px;">
+            Microcontrollers and boards for dedicated system tasks.
+        </div>   
+
+
+       
+
+        
+
+
+        
+
+        <div id="count2" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component2">0</span>
+        </div>
+        <br>
+        </a>
+        <a href="try.html?domain=pcb" class="card">
+            <!-- <img src="https://placehold.co/300x250/FFF3E0/FFA000?text=Embedded" alt="Embedded"> -->
+             <img src="pcb.png">
+             <div style="font-size:18px; padding: 10px;">
+            Boards that connect and support electronic components.
+        </div>
+        <div id="count3" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component3">6</span>
+        </div>
+        <br>
+        </a>
+
+        <!-- second row -->
+         <a href="#" class="card">
+            <!-- <img src="https://placehold.co/300x250/FCE4EC/C2185B?text=Radio+Frequency" alt="Radio Frequency Components"> -->
+             <img src="rf.png">
+             <div style="font-size:18px; padding: 10px;">
+            Devices and modules for wireless communication.
+        </div>
+        <div id="count4" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component4">9</span>
+        </div>
+        </a>
+
+        <a href="#" class="card">
+            <img src="sensors.png">
+            <div style="font-size:18px; padding: 10px;">
+            Modules that detect environment changes: gas, motion, etc.
+        </div>
+        <div id="count5" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component5">0</span>
+        </div>
+        </a>
+        <a href="#" class="card">
+            <!-- <img src="https://placehold.co/300x250/F3E5F5/4A148C?text=Tools" alt="Tools Inventory"> -->
+             <img src="tools.png">
+             
+        <div style="font-size:18px; padding: 10px;">
+            Equipment like soldering kits, wrenches, and instruments.
+        </div>
+        <div id="count6" style="font-size:18px; font-weight: bold; padding-bottom: 10px;">
+            Components: <span id="component6">10</span>
+        </div>
+
+        </a>
+    </div> 
+
+    <!-- The Login Modal -->
+    <!-- <div
+        class="plus-button"
+        id="plusButton"
+        title="Add New Item"
+        aria-label="Add New Item"
+    >
+        <i class="fa-solid fa-plus"></i>
+    </div> -->
+    
+    <script>
+
+        const domains = [
+  { key: "component1", domain: "software" },
+  { key: "component2", domain: "embedded" },
+  { key: "component3", domain: "pcb" },
+  { key: "component4", domain: "rf" },
+  { key: "component5", domain: "sensors" },
+  { key: "component6", domain: "tools" }
+];
+
+async function fetchAllCounts() {
+  for (let item of domains) {
+    try {
+      const response = await fetch(`http://localhost:3004/getComponentCount/${item.domain}`);
+      const data = await response.json();
+      document.getElementById(item.key).textContent = data.total || 0;
+    } catch (err) {
+      console.error(`Error fetching count for ${item.domain}:`, err);
+    }
+  }
+}
+
+// Call on page load
+fetchAllCounts();
+
+        document.getElementById("logoutIcon").addEventListener("click", () => {
+            const confirmed = confirm("Are you sure you want to logout?");
+            if (confirmed) {
+                // Replace with your actual logout URL
+                window.location.href = "index.html";
+            }
+        });
+
+        // Open new page on clicking plus button
+        // document.getElementById("plusButton").addEventListener("click", () => {
+        //     // Replace with your actual add-item page URL
+        //     window.location.href = "addItem.html";
+        // });
+
+        // Open new page on clicking plus button
+// document.getElementById("plusButton").addEventListener("click", () => {
+//     // Prompt the user to select a domain
+//     const domain = prompt("Which domain would you like to add an item to? (e.g., software, embedded, pcb)");
+    
+//     if (domain) {
+//         // Redirect to the addItem page with the selected domain
+//         window.location.href = `addItem.html?domain=${domain.toLowerCase()}`;
+//     }
+// });
+    </script>
+</body>
+</html>

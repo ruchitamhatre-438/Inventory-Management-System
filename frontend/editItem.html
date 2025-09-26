@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Component</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 70px; background-color: #fff; border-bottom: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+        .navbar h1 { margin: 0; font-size: 26px; color: #333; }
+        .navbar .fa-solid { font-size: 36px; color: black; cursor: pointer; }
+        .form-container { max-width: 600px; margin: 50px auto; padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .form-container h1 { text-align: center; color: #36EEE0; }
+        .form-container form div { margin-bottom: 15px; }
+        .form-container label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-container input, .form-container textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        .form-container button { width: 100%; padding: 12px; border: none; background-color: #00796b; color: white; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        .form-container button:hover { background-color: #005f56; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <span><h1 style="color:black;">Inventory Management System</h1></span>
+        <span><i class="fa-solid fa-house" onclick="window.location.href='index.html'"></i></span>
+    </div>
+
+    <div class="form-container">
+        <h1>Edit Component</h1>
+        <form id="editForm">
+            <div>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4"></textarea>
+            </div>
+            <div>
+                <label for="buyDate">Buy Date:</label>
+                <input type="date" id="buyDate" name="buyDate">
+            </div>
+            <div>
+                <label for="cost">Cost (₹):</label>
+                <input type="number" id="cost" name="cost" step="0.01">
+            </div>
+            <div>
+                <label for="warranty">Warranty (months):</label>
+                <input type="number" id="warranty" name="warranty">
+            </div>
+            <div>
+                <label for="quantity">Quantity:</label>
+                <input type="number" id="quantity" name="quantity" required>
+            </div>
+            <div>
+                <label for="condition">Condition:</label>
+                <input type="text" id="condition" name="condition">
+            </div>
+            <div>
+                <label for="remark">Remark:</label>
+                <textarea id="remark" name="remark" rows="3"></textarea>
+            </div>
+            <button type="submit">Update Component</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const domain = urlParams.get('domain');
+            const id = urlParams.get('id');
+
+            if (!domain || !id) {
+                alert('Invalid component details.');
+                window.location.href = 'index.html'; // Redirect if no parameters are found
+                return;
+            }
+
+            const editForm = document.getElementById('editForm');
+            
+            // Fetch the component's data
+            try {
+                const response = await fetch(`http://localhost:3004/getComponent/${domain}/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch component data.');
+                }
+                const component = await response.json();
+                
+                // Populate the form with fetched data
+                document.getElementById('name').value = component.name || '';
+                document.getElementById('description').value = component.description || '';
+                // Format date correctly for input type="date"
+                document.getElementById('buyDate').value = component.buyDate ? new Date(component.buyDate).toISOString().split('T')[0] : '';
+                document.getElementById('cost').value = component.cost || '';
+                document.getElementById('warranty').value = component.warranty || '';
+                document.getElementById('quantity').value = component.quantity || '';
+                document.getElementById('condition').value = component.condition || '';
+                document.getElementById('remark').value = component.remark || '';
+            } catch (error) {
+                console.error('Error fetching component:', error);
+                alert('Could not load component data for editing.');
+            }
+
+            // Handle form submission
+            editForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                const updatedData = {
+                    name: document.getElementById('name').value,
+                    description: document.getElementById('description').value,
+                    buyDate: document.getElementById('buyDate').value,
+                    cost: document.getElementById('cost').value,
+                    warranty: document.getElementById('warranty').value,
+                    quantity: document.getElementById('quantity').value,
+                    condition: document.getElementById('condition').value,
+                    remark: document.getElementById('remark').value,
+                };
+                
+                try {
+                    const response = await fetch(`http://localhost:3004/updateComponent/${domain}/${id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updatedData)
+                    });
+                    
+                    if (response.ok) {
+                        alert('Component updated successfully!');
+                        window.location.href = `${domain}_data.html`; // Redirect back to the list
+                    } else {
+                        const errorData = await response.json();
+                        alert(`Failed to update component: ${errorData.message}`);
+                    }
+                } catch (error) {
+                    console.error('Error updating component:', error);
+                    alert('An error occurred while updating the component.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

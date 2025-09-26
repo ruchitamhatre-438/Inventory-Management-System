@@ -1,0 +1,210 @@
+/* General body styling */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5; /* Light gray background */
+}
+
+/* Top navigation bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 70px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #333;
+}
+
+.navbar .fa-circle-user {
+    font-size: 36px;
+    color: #555;
+    cursor: pointer;
+}
+
+/* Main content area for the cards */
+.middle-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centers the cards horizontally */
+    align-items: flex-start;
+    padding: 40px 20px;
+    gap: 30px; /* Space between cards */
+}
+
+/* Card container styling */
+.card {
+    /* Default for larger screens: 3 boxes per row */
+    width: calc(33.33% - 20px); /* Calculates width for 3 boxes per row, accounting for gaps */
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation on hover */
+    text-align: center;
+    text-decoration: none; /* Removes underline from links */
+    color: inherit; /* Inherits text color */
+    min-width: 280px; /* Ensures a minimum width for content readability */
+}
+
+/* Hover animation for cards */
+.card:hover {
+    transform: translateY(-8px); /* Lifts the card slightly */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15); /* Adds a deeper shadow on hover */
+}
+
+/* Image styling inside the card */
+.card img {
+    width: 100%;
+    height: 250px; /* Consistent image height to fill the box */
+    object-fit: cover; /* Ensures images cover the area without distortion */
+}
+
+/* --- Modal Specific Styles --- */
+.modal {
+    position: fixed; /* Stays in place even when scrolling */
+    z-index: 10; /* Sits on top of other content */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enables scrolling if content overflows */
+    background-color: rgba(0,0,0,0.4); /* Black with transparency */
+    /* FIX: Ensure display is none initially. JavaScript will add/remove .modal--active */
+    display: none;
+}
+
+/* New class to activate and center the modal */
+.modal--active {
+    display: flex; /* Makes the modal visible and uses flexbox for centering */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    position: relative; /* For positioning the close button */
+    background-color: #fff;
+   border-radius:8px;
+    /* box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);  */
+    padding: 32px;
+    width: 90%; /* Default width for mobile */
+    max-width: 400px; /* Max width for larger screens */
+    margin: auto; /* Centers horizontally (though flexbox handles this too) */
+    box-shadow:none;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #a0aec0; /* Light gray icon */
+    cursor: pointer;
+    outline: none; /* Removes outline on focus */
+}
+
+.close-modal-btn:hover {
+    color: #4a5568; /* Darker gray on hover */
+}
+
+.modal-title {
+    font-size: 2rem; /* Large font size for title */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 24px;
+    color: #2d3748; /* Dark text color */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between form groups */
+}
+
+.form-group label {
+    display: block; /* Makes label take full width */
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 4px;
+}
+
+.form-group input {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #667eea; /* Indigo border on focus */
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2); /* Light indigo ring on focus */
+}
+
+.form-actions {
+    padding-top: 16px;
+}
+
+.login-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    background-color: #4c51bf; /* Indigo button color */
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    outline: none;
+}
+
+.login-button:hover {
+    background-color: #434190; /* Darker indigo on hover */
+}
+
+.login-button:focus {
+    box-shadow: 0 0 0 3px rgba(76, 81, 191, 0.4); /* Stronger ring on focus */
+}
+
+/* --- Responsive Adjustments with Media Queries --- */
+
+/* For tablets and smaller desktops (screens up to 1024px wide) */
+@media (max-width: 1024px) {
+    .card {
+        width: calc(50% - 20px); /* 2 boxes per row, with gap */
+    }
+}
+
+/* For mobile devices (screens up to 600px wide) */
+@media (max-width: 600px) {
+    .card {
+        width: 100%; /* 1 box per row */
+        min-width: unset; /* Remove min-width to allow full width on small screens */
+    }
+    .navbar h1 {
+        font-size: 22px; /* Smaller title on mobile */
+    }
+    .middle-body {
+        padding: 20px 10px; /* Adjust padding for mobile */
+        gap: 20px;
+    }
+}

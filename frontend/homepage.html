@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Link to your consolidated custom CSS file -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="navbar">
+        <span><h1>Inventory Management System</h1></span>
+        <!-- User icon that will open the login modal -->
+        <span><i class="fa-solid fa-circle-user" id="user-icon"></i></span>
+    </div>
+
+    <div class="middle-body">
+        <!-- First Row: Three Inventory Category Boxes -->
+        <a href="#" class="card">
+            <img src="https://placehold.co/300x250/E0F7FA/00796B?text=Software" alt="Software Inventory">
+        </a>
+        <a href="#" class="card">
+            <img src="https://placehold.co/300x250/E8F5E9/388E3C?text=PCB" alt="PCB Inventory">
+        </a>
+        <a href="#" class="card">
+            <img src="https://placehold.co/300x250/FFF3E0/FFA000?text=Embedded" alt="Embedded Systems Inventory">
+        </a>
+
+        <!-- Second Row: Three More Inventory Category Boxes -->
+        <a href="#" class="card">
+            <img src="https://placehold.co/300x250/FCE4EC/C2185B?text=Radio+Frequency" alt="Radio Frequency Components">
+        </a>
+        <a href="#" class="card">
+            <img src="https://placehold.co/300x250/E3F2FD/1565C0?text=Sensors" alt="Sensor Inventory">
+        </a>
+        <a href="#" class="card">
+            <img src="https://placehold.co/300x250/F3E5F5/4A148C?text=Tools" alt="Tools Inventory">
+        </a>
+    </div>
+
+    <!-- The Login Modal (initially hidden) -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <!-- Close Button for the modal -->
+            <button class="close-modal-btn" id="close-modal-btn">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2 class="modal-title">Login</h2>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="login-button">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Link to your custom JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>

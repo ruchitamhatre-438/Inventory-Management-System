@@ -1,0 +1,173 @@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+  body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5; /* Light gray background */
+        }
+
+  .form-container {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fefefe;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    color: #78006E;
+    margin-bottom: 25px;
+  }
+
+  .form-container label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: black;
+  }
+
+  .form-container input[type="text"],
+  .form-container input[type="date"],
+  .form-container input[type="number"],
+  .form-container textarea,
+  .form-container select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    font-size: 15px;
+  }
+
+  .form-container textarea {
+    resize: vertical;
+  }
+
+  .form-container button {
+    background-color: #1e8986;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    transition: 0.3s;
+  }
+
+  .form-container button:hover {
+    background-color: #0d4846;
+  }
+  .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 70px;
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 26px;
+            color: #333;
+        }
+        
+        .navbar .fa-circle-user {
+            font-size: 36px;
+            color: #555;
+            cursor: pointer;
+        }
+</style>
+<div class="navbar">
+        <span><h1 style="color:black;">Inventory Management System</h1></span>
+        <span><i class="fa-solid fa-circle-user" id="logoutIcon"></i></span>
+    </div>
+<div class="form-container">
+  <h1 style="text-align:center;">Add New Component</h1>
+  <form id="componentForm">
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Description:</label>
+    <textarea name="description" rows="3" required></textarea>
+
+    <label>Buy Date:</label>
+    <input type="date" name="buyDate" required>
+
+    <label>Cost (in ₹):</label>
+    <input type="number" name="cost" required>
+
+    <label>Warranty (in months):</label>
+    <input type="number" name="warranty" required>
+
+    <label>Quantity:</label>
+    <input type="number" name="quantity" required>
+
+    <label>Condition:</label>
+    <select name="condition" required>
+      <option value="">-- Select --</option>
+      <option value="New">New</option>
+      <option value="Good">Good</option>
+      <option value="Average">Average</option>
+      <option value="Damaged">Damaged</option>
+    </select>
+
+    <label>Remark:</label>
+    <input type="text" name="remark">
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+<script>
+document.getElementById('componentForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  // determine domain from URL
+  let domain = "";
+  if (window.location.pathname.includes("software")) domain = "software";
+  else if (window.location.pathname.includes("pcb")) domain = "pcb";
+  else if (window.location.pathname.includes("embedded")) domain = "embedded";
+
+  const formData = {
+    domain, // <-- important!
+    name: this.name.value,
+    description: this.description.value,
+    buyDate: this.buyDate.value,
+    cost: this.cost.value,
+    warranty: this.warranty.value,
+    quantity: this.quantity.value,
+    condition: this.condition.value,
+    remark: this.remark.value
+  };
+
+  try {
+    const res = await fetch('http://localhost:3004/addComponent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    if (res.ok) {
+      alert("Component Saved!");
+      // Redirect based on domain
+      if (domain === 'software') window.location.href = 'software_data.html';
+      else if (domain === 'embedded') window.location.href = 'embedded_data.html';
+      else if (domain === 'pcb') window.location.href = 'pcb_data.html';
+    } else {
+      const err = await res.json();
+      alert("Failed to save: " + err.error);
+    }
+  } catch (err) {
+    alert("Error occurred: " + err.message);
+  }
+});
+</script>
