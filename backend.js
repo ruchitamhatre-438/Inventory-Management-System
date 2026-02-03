@@ -107,16 +107,23 @@ app.get('/getComponents/:domain', async (req, res) => {
 });
 
 app.get('/getComponentCount/:domain', async (req, res) => {
-    try {
-        const domain = req.params.domain;
-        if (!domain) return res.status(400).json({ error: 'Domain is required.' });
-        const DomainComponent = getComponentModel(domain);
-        const count = await DomainComponent.countDocuments();
-        res.json({ total: count });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+  try {
+    const domain = req.params.domain;
+    if (!domain) {
+      return res.status(400).json({ error: 'Domain is required.' });
     }
+
+    const DomainComponent = getComponentModel(domain);
+    const count = await DomainComponent.countDocuments();
+
+    res.json({ total: count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
 });
+
+
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
